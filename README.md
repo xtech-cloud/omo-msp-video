@@ -1,9 +1,9 @@
 
 # Protocol
 
-[Cache](#Cache)
-[Task](#Task)
-[Build](#Build)
+- [Cache](#Cache)
+- [Task](#Task)
+- [Build](#Build)
 
 # Cache
 
