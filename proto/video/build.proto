@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+import "proto/video/shared.proto";
+
+package video;
+
+service Build {
+    // 将多个视频合并为一个视频
+    rpc Combine(CombineRequest) returns (BuildResponse) {}
+    // 将一个视频切割为多个视频
+    rpc Split(SplitRequest) returns (BuildResponse) {}
+    // 将图片和音频制作为一个视频
+    rpc Render(RenderRequest) returns (BuildResponse) {}
+    // 将笔迹和音频制作为一个视频
+    rpc Draw(DrawRequest) returns (BuildResponse) {}
+}
+
+// 构建回复
+message BuildResponse{ 
+    // 状态
+    Status status = 1;
+    // 任务ID
+    string taskID = 2;
+}
+
+// 合并请求
+message CombineRequest { 
+    // 视频文件地址
+    // 网络地址使用http://或https://前缀
+    // 内置存储使用file://前缀
+    repeated string video = 1;
+}
+
+// 切割策略
+enum SplitStrategy
+{
+    SIZE = 0;  // 尺寸
+    TIME = 1;  // 时间
+}
+
+// 切割请求
+message SplitRequest { 
+    // 视频文件地址
+    // 网络地址使用http://或https://前缀
+    // 内置存储使用file://前缀
+    string video = 1;
+    // 切割策略
+    SplitStrategy strategy = 2;
+    // 切割因子，strategy=SIZE时，此值的单位是字节，strategy=TIME时，此值的单位时秒
+    int32 factor = 3;
+}
+
+message Picture
+{
+    // 图片文件地址
+    // 网络地址使用http://或https://前缀
+    // 内置存储使用file://前缀
+    string image = 1;
+    // 图片在视频中的时间戳, 单位为毫秒
+    int64 timestamp = 2;
+}
+
+// 渲染请求
+message RenderRequest { 
+    // 图片集
+    repeated Picture picture = 1;
+    // 音频文件地址
+    // 网络地址使用http://或https://前缀
+    // 内置存储使用file://前缀
+    string audio = 2;
+}
+
+// 绘制请求
+message DrawRequest { 
+    // 笔迹文件地址
+    // 网络地址使用http://或https://前缀
+    // 内置存储使用file://前缀
+    string pen = 1;
+    // 音频文件地址
+    // 网络地址使用http://或https://前缀
+    // 内置存储使用file://前缀
+    string audio = 2;
+    // 笔迹数据解析器
+    string parser = 3; 
+}

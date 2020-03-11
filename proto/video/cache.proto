@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "proto/video/shared.proto";
+
+package video;
+
+// 文件缓存
+service Cache {
+    // 将数据转存为文件
+    rpc Save(SaveRequest) returns (CacheResponse) {}
+}
+
+// 缓存回复
+message CacheResponse{ 
+    // 状态
+    Status status = 1;
+    // 文件地址，以file://为前缀
+    string file = 2;
+}
+
+// 保存请求
+message SaveRequest{ 
+    // 字节数据
+    bytes data = 1;
+}

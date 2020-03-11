@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+import "proto/video/shared.proto";
+
+package video;
+
+// 任务
+service Task {
+  // 查询
+  rpc Query(QueryRequest) returns (QueryResponse) {}
+  // 取消
+  rpc Cancel(CancelRequest) returns (CancelResponse) {}
+}
+
+// 构建状态
+enum BuildStatus
+{
+    PENDING = 0;  // 等待
+    SUCCESS = 1;  // 成功
+    FAILED = 2;   // 失败
+    CANCELED = 3; // 取消
+}
+
+// 查询请求
+message QueryRequest { 
+    // 任务ID
+    string taskID = 1;
+}
+
+// 查询回复
+message QueryResponse { 
+    // 状态
+    Status status = 1;
+    // 构建状态
+    BuildStatus buildStatus = 2;
+    // 任务创建时间
+    int64 createdAt = 10;
+    // 任务更新时间
+    int64 updatedAt = 11;
+}
+
+// 取消请求
+message CancelRequest { 
+    // 任务ID
+    string taskID = 1;
+}
+
+// 取消回复
+message CancelResponse { 
+    // 状态
+    Status status = 1;
+}

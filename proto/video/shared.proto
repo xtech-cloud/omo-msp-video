@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package video;
+
+// 状态
+message Status {
+    // 状态码，0代表正常
+    int32 code = 1;  
+    // 信息, 状态码等于0时为空
+    string message = 2;
+}
+
