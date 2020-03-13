@@ -59,17 +59,21 @@ message Image
     string file = 1;
     // 图片在视频中的时间戳, 单位为毫秒
     int64 timestamp = 2;
+    // 图片在视频中的持续时间, 单位为毫秒
+    int64 duration = 3;
 }
 
 //音频
 message Audio
 {
-    // 图片文件地址
+    // 音频文件地址
     // 网络地址使用http://或https://前缀
     // 内置存储使用file://前缀
     string file = 1;
-    // 图片在视频中的时间戳, 单位为毫秒
+    // 音频在视频中的时间戳, 单位为毫秒
     int64 timestamp = 2;
+    // 音频在视频中的持续时间, 单位为毫秒
+    int64 duration = 3;
 }
 
 //笔迹
