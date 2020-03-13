@@ -50,36 +50,54 @@ message SplitRequest {
     int32 factor = 3;
 }
 
-message Picture
+//图片
+message Image
 {
     // 图片文件地址
     // 网络地址使用http://或https://前缀
     // 内置存储使用file://前缀
-    string image = 1;
+    string file = 1;
     // 图片在视频中的时间戳, 单位为毫秒
     int64 timestamp = 2;
 }
 
+//音频
+message Audio
+{
+    // 图片文件地址
+    // 网络地址使用http://或https://前缀
+    // 内置存储使用file://前缀
+    string file = 1;
+    // 图片在视频中的时间戳, 单位为毫秒
+    int64 timestamp = 2;
+}
+
+//笔迹
+message Pen
+{
+    // 图片文件地址
+    // 网络地址使用http://或https://前缀
+    // 内置存储使用file://前缀
+    string file = 1;
+    // 图片在视频中的时间戳, 单位为毫秒
+    int64 timestamp = 2;
+}
+
+
 // 渲染请求
 message RenderRequest { 
     // 图片集
-    repeated Picture picture = 1;
-    // 音频文件地址
-    // 网络地址使用http://或https://前缀
-    // 内置存储使用file://前缀
-    string audio = 2;
+    repeated Image image = 1;
+    // 音频集
+    repeated Audio audio = 2;
 }
 
 // 绘制请求
 message DrawRequest { 
-    // 笔迹文件地址
-    // 网络地址使用http://或https://前缀
-    // 内置存储使用file://前缀
-    string pen = 1;
-    // 音频文件地址
-    // 网络地址使用http://或https://前缀
-    // 内置存储使用file://前缀
-    string audio = 2;
+    // 笔迹集
+    repeated Pen pen = 1;
+    // 音频集
+    repeated Audio audio = 2;
     // 笔迹数据解析器
     string parser = 3; 
 }
