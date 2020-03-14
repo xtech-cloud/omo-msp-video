@@ -15,10 +15,11 @@ service Task {
 // 构建状态
 enum BuildStatus
 {
-    PENDING = 0;  // 等待
-    SUCCESS = 1;  // 成功
-    FAILED = 2;   // 失败
-    CANCELED = 3; // 取消
+    PENDING = 0;  // 等待中
+    PROCESSING = 1;  // 处理中
+    SUCCESS = 2;  // 成功
+    FAILED = 3;   // 失败
+    CANCELED = 4; // 取消
 }
 
 // 查询请求
@@ -33,6 +34,8 @@ message QueryResponse {
     Status status = 1;
     // 构建状态
     BuildStatus buildStatus = 2;
+    // 视频的存放地址，仅当构建成功时有值
+    string url = 3;
     // 任务创建时间
     int64 createdAt = 10;
     // 任务更新时间
