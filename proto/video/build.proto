@@ -11,8 +11,6 @@ service Build {
     rpc Split(SplitRequest) returns (BuildResponse) {}
     // 将图片和音频制作为一个视频
     rpc Render(RenderRequest) returns (BuildResponse) {}
-    // 将笔迹和音频制作为一个视频
-    rpc Draw(DrawRequest) returns (BuildResponse) {}
 }
 
 // 构建回复
@@ -57,9 +55,9 @@ message Image
     // 网络地址使用http://或https://前缀
     // 内置存储使用file://前缀
     string file = 1;
-    // 图片在视频中的时间戳, 单位为毫秒
-    int64 timestamp = 2;
-    // 图片在视频中的持续时间, 单位为毫秒
+    // 时间戳的偏移值, 单位为毫秒
+    int64 offset = 2;
+    // 持续时间, 单位为毫秒,超出此时间的内容会被截断
     int64 duration = 3;
 }
 
@@ -70,23 +68,11 @@ message Audio
     // 网络地址使用http://或https://前缀
     // 内置存储使用file://前缀
     string file = 1;
-    // 音频在视频中的时间戳, 单位为毫秒
-    int64 timestamp = 2;
-    // 音频在视频中的持续时间, 单位为毫秒
+    // 时间戳的偏移值, 单位为毫秒
+    int64 offset = 2;
+    // 持续时间, 单位为毫秒,超出此时间的内容会被截断
     int64 duration = 3;
 }
-
-//笔迹
-message Pen
-{
-    // 图片文件地址
-    // 网络地址使用http://或https://前缀
-    // 内置存储使用file://前缀
-    string file = 1;
-    // 图片在视频中的时间戳, 单位为毫秒
-    int64 timestamp = 2;
-}
-
 
 // 渲染请求
 message RenderRequest { 
@@ -94,14 +80,4 @@ message RenderRequest {
     repeated Image image = 1;
     // 音频集
     repeated Audio audio = 2;
-}
-
-// 绘制请求
-message DrawRequest { 
-    // 笔迹集
-    repeated Pen pen = 1;
-    // 音频集
-    repeated Audio audio = 2;
-    // 笔迹数据解析器
-    string parser = 3; 
 }

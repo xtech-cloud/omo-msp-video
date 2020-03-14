@@ -40,8 +40,6 @@ type BuildService interface {
 	Split(ctx context.Context, in *SplitRequest, opts ...client.CallOption) (*BuildResponse, error)
 	// 将图片和音频制作为一个视频
 	Render(ctx context.Context, in *RenderRequest, opts ...client.CallOption) (*BuildResponse, error)
-	// 将笔迹和音频制作为一个视频
-	Draw(ctx context.Context, in *DrawRequest, opts ...client.CallOption) (*BuildResponse, error)
 }
 
 type buildService struct {
@@ -86,16 +84,6 @@ func (c *buildService) Render(ctx context.Context, in *RenderRequest, opts ...cl
 	return out, nil
 }
 
-func (c *buildService) Draw(ctx context.Context, in *DrawRequest, opts ...client.CallOption) (*BuildResponse, error) {
-	req := c.c.NewRequest(c.name, "Build.Draw", in)
-	out := new(BuildResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // Server API for Build service
 
 type BuildHandler interface {
@@ -105,8 +93,6 @@ type BuildHandler interface {
 	Split(context.Context, *SplitRequest, *BuildResponse) error
 	// 将图片和音频制作为一个视频
 	Render(context.Context, *RenderRequest, *BuildResponse) error
-	// 将笔迹和音频制作为一个视频
-	Draw(context.Context, *DrawRequest, *BuildResponse) error
 }
 
 func RegisterBuildHandler(s server.Server, hdlr BuildHandler, opts ...server.HandlerOption) error {
@@ -114,7 +100,6 @@ func RegisterBuildHandler(s server.Server, hdlr BuildHandler, opts ...server.Han
 		Combine(ctx context.Context, in *CombineRequest, out *BuildResponse) error
 		Split(ctx context.Context, in *SplitRequest, out *BuildResponse) error
 		Render(ctx context.Context, in *RenderRequest, out *BuildResponse) error
-		Draw(ctx context.Context, in *DrawRequest, out *BuildResponse) error
 	}
 	type Build struct {
 		build
@@ -137,8 +122,4 @@ func (h *buildHandler) Split(ctx context.Context, in *SplitRequest, out *BuildRe
 
 func (h *buildHandler) Render(ctx context.Context, in *RenderRequest, out *BuildResponse) error {
 	return h.BuildHandler.Render(ctx, in, out)
-}
-
-func (h *buildHandler) Draw(ctx context.Context, in *DrawRequest, out *BuildResponse) error {
-	return h.BuildHandler.Draw(ctx, in, out)
 }
