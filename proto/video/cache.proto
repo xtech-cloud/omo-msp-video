@@ -22,4 +22,6 @@ message CacheResponse{
 message SaveRequest{ 
     // 字节数据
     bytes data = 1;
+    // 文件扩展名，不包含.号
+    string extension = 2;
 }
