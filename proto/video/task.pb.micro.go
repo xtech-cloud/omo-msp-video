@@ -38,6 +38,8 @@ type TaskService interface {
 	Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error)
 	// 取消
 	Cancel(ctx context.Context, in *CancelRequest, opts ...client.CallOption) (*CancelResponse, error)
+	// 取走合成完的文件，取走后文件将被删除
+	Take(ctx context.Context, in *TakeRequest, opts ...client.CallOption) (*TakeResponse, error)
 }
 
 type taskService struct {
@@ -72,6 +74,16 @@ func (c *taskService) Cancel(ctx context.Context, in *CancelRequest, opts ...cli
 	return out, nil
 }
 
+func (c *taskService) Take(ctx context.Context, in *TakeRequest, opts ...client.CallOption) (*TakeResponse, error) {
+	req := c.c.NewRequest(c.name, "Task.Take", in)
+	out := new(TakeResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Task service
 
 type TaskHandler interface {
@@ -79,12 +91,15 @@ type TaskHandler interface {
 	Query(context.Context, *QueryRequest, *QueryResponse) error
 	// 取消
 	Cancel(context.Context, *CancelRequest, *CancelResponse) error
+	// 取走合成完的文件，取走后文件将被删除
+	Take(context.Context, *TakeRequest, *TakeResponse) error
 }
 
 func RegisterTaskHandler(s server.Server, hdlr TaskHandler, opts ...server.HandlerOption) error {
 	type task interface {
 		Query(ctx context.Context, in *QueryRequest, out *QueryResponse) error
 		Cancel(ctx context.Context, in *CancelRequest, out *CancelResponse) error
+		Take(ctx context.Context, in *TakeRequest, out *TakeResponse) error
 	}
 	type Task struct {
 		task
@@ -103,4 +118,8 @@ func (h *taskHandler) Query(ctx context.Context, in *QueryRequest, out *QueryRes
 
 func (h *taskHandler) Cancel(ctx context.Context, in *CancelRequest, out *CancelResponse) error {
 	return h.TaskHandler.Cancel(ctx, in, out)
+}
+
+func (h *taskHandler) Take(ctx context.Context, in *TakeRequest, out *TakeResponse) error {
+	return h.TaskHandler.Take(ctx, in, out)
 }

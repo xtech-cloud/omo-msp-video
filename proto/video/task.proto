@@ -10,6 +10,8 @@ service Task {
   rpc Query(QueryRequest) returns (QueryResponse) {}
   // 取消
   rpc Cancel(CancelRequest) returns (CancelResponse) {}
+  // 取走合成完的文件，取走后文件将被删除
+  rpc Take(TakeRequest) returns (TakeResponse) {}
 }
 
 // 构建状态
@@ -50,6 +52,18 @@ message CancelRequest {
 
 // 取消回复
 message CancelResponse { 
+    // 状态
+    Status status = 1;
+}
+
+// 取走请求
+message TakeRequest { 
+    // 任务ID
+    string taskID = 1;
+}
+
+// 取走回复
+message TakeResponse { 
     // 状态
     Status status = 1;
 }
