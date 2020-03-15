@@ -66,4 +66,6 @@ message TakeRequest {
 message TakeResponse { 
     // 状态
     Status status = 1;
+    // 文件数据
+    bytes data = 2;
 }
