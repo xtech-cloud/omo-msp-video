@@ -13,6 +13,11 @@ service Build {
     rpc Render(RenderRequest) returns (BuildResponse) {}
 }
 
+message BuildOptions{ 
+    //帧率
+    int32 fps = 1; 
+}
+
 // 构建回复
 message BuildResponse{ 
     // 状态
@@ -82,4 +87,6 @@ message RenderRequest {
     repeated Audio audio = 2;
     // 视频的时长，如果此值为0，将使用图片和视频较大的duration值作为整个视频的时长
     int64 duration = 3;
+    // 构建选项
+    BuildOptions options = 10;
 }
