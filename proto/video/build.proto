@@ -14,8 +14,11 @@ service Build {
 }
 
 message BuildOptions{ 
-    //帧率
+    //帧率，默认值为24
     int32 fps = 1; 
+    //分辨率，默认值为 "1920x1080"
+    string resolution = 2;
+
 }
 
 // 构建回复
@@ -89,4 +92,5 @@ message RenderRequest {
     int64 duration = 3;
     // 构建选项
     BuildOptions options = 10;
+    //
 }
