@@ -80,4 +80,6 @@ message RenderRequest {
     repeated Image image = 1;
     // 音频集
     repeated Audio audio = 2;
+    // 视频的时长，如果此值为0，将使用图片和视频较大的duration值作为整个视频的时长
+    int64 duration = 3;
 }
