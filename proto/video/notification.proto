@@ -8,5 +8,7 @@ message Notification {
     string taskID = 1;
     // 状态
     string status = 2;
+    // 消息
+    string message = 3;
 }
 
