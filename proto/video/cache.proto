@@ -24,4 +24,6 @@ message SaveRequest{
     bytes data = 1;
     // 文件扩展名，不包含.号
     string extension = 2;
+    // 整个数据包的大小
+    int64 size = 3;
 }
