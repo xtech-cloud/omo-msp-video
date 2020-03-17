@@ -7,7 +7,9 @@ package video;
 // 文件缓存
 service Cache {
     // 将数据转存为文件
-    rpc Save(stream SaveRequest) returns (CacheResponse) {}
+    rpc Save(SaveRequest) returns (CacheResponse) {}
+    // 将数据转存为文件
+    rpc StreamSave(stream StreamSaveRequest) returns (CacheResponse) {}
 }
 
 // 缓存回复
@@ -20,6 +22,14 @@ message CacheResponse{
 
 // 保存请求
 message SaveRequest{ 
+    // 字节数据
+    bytes data = 1;
+    // 文件扩展名，不包含.号
+    string extension = 2;
+}
+
+// 保存请求
+message StreamSaveRequest{ 
     // 字节数据
     bytes data = 1;
     // 文件扩展名，不包含.号
