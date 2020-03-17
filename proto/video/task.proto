@@ -36,8 +36,10 @@ message QueryResponse {
     Status status = 1;
     // 构建状态
     BuildStatus buildStatus = 2;
+    // 构建日志
+    string buildLog = 3;
     // 视频的存放地址，仅当构建成功时有值
-    string url = 3;
+    string url = 4;
     // 任务创建时间
     int64 createdAt = 10;
     // 任务更新时间
