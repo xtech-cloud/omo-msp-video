@@ -35,7 +35,7 @@ var _ server.Option
 
 type CacheService interface {
 	// 将数据转存为文件
-	Save(ctx context.Context, in *SaveRequest, opts ...client.CallOption) (*CacheResponse, error)
+	Save(ctx context.Context, opts ...client.CallOption) (Cache_SaveService, error)
 }
 
 type cacheService struct {
@@ -50,26 +50,57 @@ func NewCacheService(name string, c client.Client) CacheService {
 	}
 }
 
-func (c *cacheService) Save(ctx context.Context, in *SaveRequest, opts ...client.CallOption) (*CacheResponse, error) {
-	req := c.c.NewRequest(c.name, "Cache.Save", in)
-	out := new(CacheResponse)
-	err := c.c.Call(ctx, req, out, opts...)
+func (c *cacheService) Save(ctx context.Context, opts ...client.CallOption) (Cache_SaveService, error) {
+	req := c.c.NewRequest(c.name, "Cache.Save", &SaveRequest{})
+	stream, err := c.c.Stream(ctx, req, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	return &cacheServiceSave{stream}, nil
+}
+
+type Cache_SaveService interface {
+	Context() context.Context
+	SendMsg(interface{}) error
+	RecvMsg(interface{}) error
+	Close() error
+	Send(*SaveRequest) error
+}
+
+type cacheServiceSave struct {
+	stream client.Stream
+}
+
+func (x *cacheServiceSave) Close() error {
+	return x.stream.Close()
+}
+
+func (x *cacheServiceSave) Context() context.Context {
+	return x.stream.Context()
+}
+
+func (x *cacheServiceSave) SendMsg(m interface{}) error {
+	return x.stream.Send(m)
+}
+
+func (x *cacheServiceSave) RecvMsg(m interface{}) error {
+	return x.stream.Recv(m)
+}
+
+func (x *cacheServiceSave) Send(m *SaveRequest) error {
+	return x.stream.Send(m)
 }
 
 // Server API for Cache service
 
 type CacheHandler interface {
 	// 将数据转存为文件
-	Save(context.Context, *SaveRequest, *CacheResponse) error
+	Save(context.Context, Cache_SaveStream) error
 }
 
 func RegisterCacheHandler(s server.Server, hdlr CacheHandler, opts ...server.HandlerOption) error {
 	type cache interface {
-		Save(ctx context.Context, in *SaveRequest, out *CacheResponse) error
+		Save(ctx context.Context, stream server.Stream) error
 	}
 	type Cache struct {
 		cache
@@ -82,6 +113,42 @@ type cacheHandler struct {
 	CacheHandler
 }
 
-func (h *cacheHandler) Save(ctx context.Context, in *SaveRequest, out *CacheResponse) error {
-	return h.CacheHandler.Save(ctx, in, out)
+func (h *cacheHandler) Save(ctx context.Context, stream server.Stream) error {
+	return h.CacheHandler.Save(ctx, &cacheSaveStream{stream})
+}
+
+type Cache_SaveStream interface {
+	Context() context.Context
+	SendMsg(interface{}) error
+	RecvMsg(interface{}) error
+	Close() error
+	Recv() (*SaveRequest, error)
+}
+
+type cacheSaveStream struct {
+	stream server.Stream
+}
+
+func (x *cacheSaveStream) Close() error {
+	return x.stream.Close()
+}
+
+func (x *cacheSaveStream) Context() context.Context {
+	return x.stream.Context()
+}
+
+func (x *cacheSaveStream) SendMsg(m interface{}) error {
+	return x.stream.Send(m)
+}
+
+func (x *cacheSaveStream) RecvMsg(m interface{}) error {
+	return x.stream.Recv(m)
+}
+
+func (x *cacheSaveStream) Recv() (*SaveRequest, error) {
+	m := new(SaveRequest)
+	if err := x.stream.Recv(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
